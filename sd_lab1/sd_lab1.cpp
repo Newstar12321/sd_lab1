@@ -7,8 +7,6 @@
 */
 
 #include <iostream>
-#include <ctime>
-#include <random>
 #include <Windows.h>
 
 using namespace std;
@@ -33,13 +31,16 @@ int main()
 
     // Определение размера массива
     size_t m; // m - Число элементов массива
-    cout << "Введите количество элементов массива (0 < m > 800): ";
+    const size_t Max = 10000;
+    cout << "Введите количество элементов массива (0 < m < " << Max << "): ";
     cin >> m;
-    if (m > 800)
+    if (!m || m > Max+1)
     {
         cerr << "Ошибка! : Недопустимое значение m\n";
         return 1;
     }
+
+    double start_time = clock();
 
     // Создание массива и его преобразование
     int* array = new int [m];
@@ -47,6 +48,8 @@ int main()
     cout << "Изначальный массив:\n";
     arrOut(m, array);
     arrUpd(m, array);
+    cout << "Обработанный массив:\n";
+    arrOut(m, array);
 
     // Сортировка массива
     arrSort(m, array);
@@ -54,6 +57,10 @@ int main()
     // Вывод массива
     cout << "Обработанный и отсортированный массив:\n";
     arrOut(m, array);
+
+    double end_time = clock(); // конечное время
+    double search_time = end_time - start_time; // искомое время
+    cout << "Время выполнения (с учетом вывода на экран): " << search_time / CLOCKS_PER_SEC;
 
     // Освобождение памяти
     delete[] array;
@@ -84,7 +91,7 @@ void arrSwap(const size_t& m, size_t i, int* array)
 {
     int larg = i; // larg - largest
     int rt = i * 2 + 1; // rt - right
-    int lt = i * 2 + 2; // lt - left
+    int lt = i * 2; // lt - left
 
     if (lt < m && array[lt] > array[larg])
     {
